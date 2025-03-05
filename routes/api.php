@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\Auth\SocialiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,17 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('user')->group(function () {
+    Route::get('/{id}', [UserController::class, 'show']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::post('/register', [UserController::class, 'store']);
+    Route::put('/update/{id}', [UserController::class, 'update']);
+    Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+});
+
+Route::prefix('auth')->group(function () {
+    Route::get('/google/redirect', [SocialiteController::class, 'redirect']);
+    Route::get('/google/callback', [SocialiteController::class, 'callback']);
+});
+
